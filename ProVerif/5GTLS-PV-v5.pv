@@ -1,0 +1,121 @@
+(* 5G-TLS for ProVerif *)
+
+(* Symmetric key encryption *)
+
+type key.
+fun senc(bitstring, key): bitstring.
+reduc forall m: bitstring, k: key; sdec(senc(m,k),k) = m.
+
+(* Asymmetric key encryption *)
+
+type skey.
+type pkey.
+
+fun pk(skey): pkey.
+fun aenc(bitstring, pkey): bitstring.
+
+reduc forall m: bitstring, sk: skey; adec(aenc(m,pk(sk)),sk) = m.
+
+(* Hash Function *)
+
+fun h(bitstring,bitstring,bitstring): bitstring.
+
+(* typeConverter Function *)
+fun b_to_k(bitstring):key [data,typeConverter].
+
+(* Digital signatures *)
+
+type sskey.
+type spkey.
+
+fun spk(sskey): spkey.
+fun sign(bitstring, sskey): bitstring.
+
+reduc forall m: bitstring, k: sskey; getmess(sign(m,k)) = m.
+reduc forall m: bitstring, k: sskey; checksign(sign(m,k),spk(k)) = m.
+
+
+free c:channel.
+free CertNW:bitstring.
+free CertUE:bitstring.
+free SUPI:bitstring [private].
+free Ksession:key [private].
+free prekey:bitstring [private].
+query attacker(prekey).
+query attacker(Ksession).
+query attacker(SUPI).
+
+event sendPrek(bitstring).
+event acceptPrek(bitstring).
+
+query x:bitstring; inj-event(acceptPrek(x))==>inj-event(sendPrek(x)).
+
+event acceptsUE(bitstring).
+event termNW(bitstring).
+
+query x:bitstring; inj-event(termNW(x))==>inj-event(acceptsUE(x)).
+
+event acceptsNW(bitstring).
+event termUE(bitstring).
+
+query x:bitstring; inj-event(termUE(x))==>inj-event(acceptsNW(x)).
+
+let clientUE(pkNW:pkey,spkNW:spkey,spkUE:spkey,sskUE:sskey,skUE:skey) =
+	
+	new Rue:bitstring;
+	out(c,aenc((SUPI,Rue),pkNW));
+	in(c,y:bitstring);
+	let (Startx:bitstring,(=Rue)) = adec(y,skUE) in
+	new Rue1:bitstring;
+	out(c,aenc((Rue1,Startx),pkNW));
+	in(c,(x:bitstring,CertNWx:bitstring));
+	let (Rausfx:bitstring,(=Rue1)) = adec(x,skUE) in
+	let (=CertNW) = CertNWx in
+	new Rprekey:bitstring;
+	let prekey = Rprekey in
+	let a = h(Rue1,Rausfx,Rprekey) in
+	let Ksession = b_to_k(a) in 
+	let HSUE = (Startx,Rue1,Rausfx,CertNWx) in 
+	event acceptsUE(SUPI);
+	event sendPrek(Rprekey);
+	out(c,(aenc((Rprekey,Rue),pkNW),CertUE,sign(HSUE,sskUE),senc(HSUE,Ksession)));
+	in(c,HSNWx:bitstring);
+	let ((=HSUE),(=SUPI)) = sdec(HSNWx,Ksession) in
+	event termUE(Startx).
+
+let serverNW(skNW:skey,pkUE:pkey,spkUE:spkey,sskNW:sskey,spkNW:spkey) =
+	in(c, x:bitstring);
+	let (SUPIx:bitstring,Ruex:bitstring) = adec(x,skNW) in
+	if SUPIx = SUPI then
+	new start:bitstring;
+	out(c,aenc((start,Ruex),pkUE));
+	in(c,(v:bitstring));
+	let (Rue1x:bitstring,(=start)) =adec(v,skNW) in
+	new Rausf:bitstring;
+	out(c,(aenc((Rausf,Rue1x),pkUE),CertNW));
+	in(c,(y:bitstring,CertUEx:bitstring,t:bitstring,z:bitstring));
+	let (=CertUE) = CertUEx in
+	let (Rprekeyx:bitstring,(=Ruex)) = adec(y,skNW) in 
+	let b = h(Rue1x,Rausf,Rprekeyx) in
+	let Ksessionx = b_to_k(b) in
+	new HSNW:bitstring;
+	let HSNW = (start,Rue1x,Rausf,CertNW) in
+	let (=HSNW) = sdec(z,Ksessionx) in
+	let (=HSNW) = checksign(t,spkUE) in
+	event acceptPrek(Rprekeyx);
+	event acceptsNW(start);
+	out(c,senc((HSNW,SUPIx),Ksessionx));
+	event termNW(SUPIx).
+
+process
+	new skUE:skey;
+	new skNW:skey;
+	new sskNW:sskey;
+	new sskUE:sskey;
+	let pkUE = pk(skUE) in out(c,pkUE);
+	let pkNW = pk(skNW) in out(c,pkNW);
+	let spkNW = spk(sskNW) in out(c,spkNW);
+	let spkUE = spk(sskUE) in out(c,spkUE);
+	( (!clientUE(pkNW,spkNW,spkUE,sskUE,skUE)) | (!serverNW(skNW,pkUE,spkUE,sskNW,spkNW)) )
+	
+

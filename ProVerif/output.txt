@@ -1,0 +1,94 @@
+File "examples\5GTLS-PV-v5.pv", line 75, characters 6-11:
+Warning: identifier prekey rebound.
+File "examples\5GTLS-PV-v5.pv", line 77, characters 6-13:
+Warning: identifier Ksession rebound.
+File "examples\5GTLS-PV-v5.pv", line 102, characters 6-9:
+Warning: identifier HSNW rebound.
+Process:
+{1}new skUE: skey;
+{2}new skNW: skey;
+{3}new sskNW: sskey;
+{4}new sskUE: sskey;
+{5}let pkUE: pkey = pk(skUE) in
+{6}out(c, pkUE);
+{7}let pkNW: pkey = pk(skNW) in
+{8}out(c, pkNW);
+{9}let spkNW: spkey = spk(sskNW) in
+{10}out(c, spkNW);
+{11}let spkUE: spkey = spk(sskUE) in
+{12}out(c, spkUE);
+(
+    {13}!
+    {14}new Rue: bitstring;
+    {15}out(c, aenc((SUPI,Rue),pkNW));
+    {16}in(c, y: bitstring);
+    {17}let (Startx: bitstring,=Rue) = adec(y,skUE) in
+    {18}new Rue1: bitstring;
+    {19}out(c, aenc((Rue1,Startx),pkNW));
+    {20}in(c, (x: bitstring,CertNWx: bitstring));
+    {21}let (Rausfx: bitstring,=Rue1) = adec(x,skUE) in
+    {22}let =CertNW = CertNWx in
+    {23}new Rprekey: bitstring;
+    {24}let prekey_36: bitstring = Rprekey in
+    {25}let a: bitstring = h(Rue1,Rausfx,Rprekey) in
+    {26}let Ksession_37: key = a in
+    {27}let HSUE: bitstring = (Startx,Rue1,Rausfx,CertNWx) in
+    {28}event acceptsUE(SUPI);
+    {29}event sendPrek(Rprekey);
+    {30}out(c, (aenc((Rprekey,Rue),pkNW),CertUE,sign(HSUE,sskUE),senc(HSUE,Ksession_37)));
+    {31}in(c, HSNWx: bitstring);
+    {32}let (=HSUE,=SUPI) = sdec(HSNWx,Ksession_37) in
+    {33}event termUE(Startx)
+) | (
+    {34}!
+    {35}in(c, x_38: bitstring);
+    {36}let (SUPIx: bitstring,Ruex: bitstring) = adec(x_38,skNW) in
+    {37}if (SUPIx = SUPI) then
+    {38}new start: bitstring;
+    {39}out(c, aenc((start,Ruex),pkUE));
+    {40}in(c, v_39: bitstring);
+    {41}let (Rue1x: bitstring,=start) = adec(v_39,skNW) in
+    {42}new Rausf: bitstring;
+    {43}out(c, (aenc((Rausf,Rue1x),pkUE),CertNW));
+    {44}in(c, (y_40: bitstring,CertUEx: bitstring,t: bitstring,z: bitstring));
+    {45}let =CertUE = CertUEx in
+    {46}let (Rprekeyx: bitstring,=Ruex) = adec(y_40,skNW) in
+    {47}let b: bitstring = h(Rue1x,Rausf,Rprekeyx) in
+    {48}let Ksessionx: key = b in
+    {49}new HSNW: bitstring;
+    {50}let HSNW_41: bitstring = (start,Rue1x,Rausf,CertNW) in
+    {51}let =HSNW_41 = sdec(z,Ksessionx) in
+    {52}let =HSNW_41 = checksign(t,spkUE) in
+    {53}event acceptPrek(Rprekeyx);
+    {54}event acceptsNW(start);
+    {55}out(c, senc((HSNW_41,SUPIx),Ksessionx));
+    {56}event termNW(SUPIx)
+)
+
+-- Query not attacker(prekey[])
+Completing...
+Starting query not attacker(prekey[])
+RESULT not attacker(prekey[]) is true.
+-- Query not attacker(Ksession[])
+Completing...
+Starting query not attacker(Ksession[])
+RESULT not attacker(Ksession[]) is true.
+-- Query not attacker(SUPI[])
+Completing...
+Starting query not attacker(SUPI[])
+RESULT not attacker(SUPI[]) is true.
+-- Query inj-event(acceptPrek(x_42)) ==> inj-event(sendPrek(x_42))
+Completing...
+Starting query inj-event(acceptPrek(x_42)) ==> inj-event(sendPrek(x_42))
+goal reachable: begin(sendPrek(Rprekey[CertNWx = CertNW[],x = aenc((Rausf[v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue[!1 = @sid_5811]),pk(skUE[])),!1 = @sid_5811],start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812]),pk(skNW[])),x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue[!1 = @sid_5811]),pk(skUE[])),!1 = @sid_5811]),pk(skUE[])),y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue[!1 = @sid_5811]),pk(skUE[])),!1 = @sid_5811]), CertNWx = CertNW[], x = aenc((Rausf[v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue[!1 = @sid_5811]),pk(skUE[])),!1 = @sid_5811],start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812]),pk(skNW[])),x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue[!1 = @sid_5811]),pk(skUE[])),!1 = @sid_5811]),pk(skUE[])), y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue[!1 = @sid_5811]),pk(skUE[])), @sid = @sid_5811, @occ29 = @occ_cst) -> end(endsid_5812,acceptPrek(Rprekey[CertNWx = CertNW[],x = aenc((Rausf[v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue[!1 = @sid_5811]),pk(skUE[])),!1 = @sid_5811],start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812]),pk(skNW[])),x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue[!1 = @sid_5811]),pk(skUE[])),!1 = @sid_5811]),pk(skUE[])),y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_5811]),pk(skNW[])),!1 = endsid_5812],Rue[!1 = @sid_5811]),pk(skUE[])),!1 = @sid_5811]))
+RESULT inj-event(acceptPrek(x_42)) ==> inj-event(sendPrek(x_42)) is true.
+-- Query inj-event(termNW(x_43)) ==> inj-event(acceptsUE(x_43))
+Completing...
+Starting query inj-event(termNW(x_43)) ==> inj-event(acceptsUE(x_43))
+goal reachable: begin(acceptsUE(SUPI[]), CertNWx = CertNW[], x = aenc((Rausf[v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_7675]),pk(skNW[])),!1 = endsid_7676],Rue[!1 = @sid_7675]),pk(skUE[])),!1 = @sid_7675],start[x_38 = aenc((SUPI[],Rue[!1 = @sid_7675]),pk(skNW[])),!1 = endsid_7676]),pk(skNW[])),x_38 = aenc((SUPI[],Rue[!1 = @sid_7675]),pk(skNW[])),!1 = endsid_7676],Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_7675]),pk(skNW[])),!1 = endsid_7676],Rue[!1 = @sid_7675]),pk(skUE[])),!1 = @sid_7675]),pk(skUE[])), y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = @sid_7675]),pk(skNW[])),!1 = endsid_7676],Rue[!1 = @sid_7675]),pk(skUE[])), @sid = @sid_7675, @occ28 = @occ_cst) -> end(endsid_7676,termNW(SUPI[]))
+RESULT inj-event(termNW(x_43)) ==> inj-event(acceptsUE(x_43)) is true.
+-- Query inj-event(termUE(x_44)) ==> inj-event(acceptsNW(x_44))
+Completing...
+Starting query inj-event(termUE(x_44)) ==> inj-event(acceptsNW(x_44))
+goal reachable: begin(acceptsNW(start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176]), z = senc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],Rausf[v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176]),pk(skNW[])),x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],CertNW[]),h(Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],Rausf[v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176]),pk(skNW[])),x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rprekey[CertNWx = CertNW[],x = aenc((Rausf[v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176]),pk(skNW[])),x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175]),pk(skUE[])),y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175])), t = sign((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],Rausf[v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176]),pk(skNW[])),x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],CertNW[]),sskUE[]), CertUEx = CertUE[], y_40 = aenc((Rprekey[CertNWx = CertNW[],x = aenc((Rausf[v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176]),pk(skNW[])),x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175]),pk(skUE[])),y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],Rue[!1 = endsid_9175]),pk(skNW[])), v_39 = aenc((Rue1[y = aenc((start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176],Rue[!1 = endsid_9175]),pk(skUE[])),!1 = endsid_9175],start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176]),pk(skNW[])), x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])), @sid_441 = @sid_9176, @occ54 = @occ_cst) -> end(endsid_9175,termUE(start[x_38 = aenc((SUPI[],Rue[!1 = endsid_9175]),pk(skNW[])),!1 = @sid_9176]))
+RESULT inj-event(termUE(x_44)) ==> inj-event(acceptsNW(x_44)) is true.

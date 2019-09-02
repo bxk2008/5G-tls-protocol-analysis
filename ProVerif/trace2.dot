@@ -1,0 +1,163 @@
+digraph {
+graph [ordering = out]
+edge [arrowhead = none, penwidth = 1.6, fontsize = 30]
+node [shape = point, width = 0, height = 0, fontsize = 30]
+Trace<br/>
+[label = <A trace has been found.<br/>
+>, shape = plaintext]
+P0__0 [label = "Honest Process", shape = plaintext]
+P__0 [label = "Attacker", shape = plaintext]
+Trace -> P0__0 [label = "", style = invisible, weight = 100]{rank = same; P0__0 P__0}
+P0__0 -> P0__1 [label = <>, weight = 100]
+P0__1 -> P0__2 [label = <>, weight = 100]
+P0__2 [shape = plaintext, label = <<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"> <TR><TD><FONT COLOR="darkgreen">{1}</FONT><FONT COLOR="blue">new </FONT>skUE_4659</TD></TR><TR><TD><FONT COLOR="darkgreen">{2}</FONT><FONT COLOR="blue">new </FONT>skNW_4651</TD></TR><TR><TD><FONT COLOR="darkgreen">{3}</FONT><FONT COLOR="blue">new </FONT>sskNW_4660</TD></TR><TR><TD><FONT COLOR="darkgreen">{4}</FONT><FONT COLOR="blue">new </FONT>sskUE_4653</TD></TR></TABLE>>]
+P0__2 -> P0__3 [label = <>, weight = 100]
+P0__3 -> P0__4 [label = <>, weight = 100]
+P__0 -> P__1 [label = <>, weight = 100]
+{rank = same; P__1 P0__4}
+P0__4 -> P0__5 [label = <>, weight = 100]
+P__1 -> P__2 [label = <>, weight = 100]
+{rank = same; P__2 P0__5}
+P0__5 -> P__2 [label = <~M_4685 = pk(skUE_4659)>, arrowhead = normal]
+P0__5 -> P0__6 [label = <>, weight = 100]
+P__2 -> P__3 [label = <>, weight = 100]
+{rank = same; P__3 P0__6}
+P0__6 -> P0__7 [label = <>, weight = 100]
+P__3 -> P__4 [label = <>, weight = 100]
+{rank = same; P__4 P0__7}
+P0__7 -> P0__8 [label = <>, weight = 100]
+P__4 -> P__5 [label = <>, weight = 100]
+{rank = same; P__5 P0__8}
+P0__8 -> P__5 [label = <~M_4709 = pk(skNW_4651)>, arrowhead = normal]
+P0__8 -> P0__9 [label = <>, weight = 100]
+P__5 -> P__6 [label = <>, weight = 100]
+{rank = same; P__6 P0__9}
+P0__9 -> P0__10 [label = <>, weight = 100]
+P__6 -> P__7 [label = <>, weight = 100]
+{rank = same; P__7 P0__10}
+P0__10 -> P0__11 [label = <>, weight = 100]
+P__7 -> P__8 [label = <>, weight = 100]
+{rank = same; P__8 P0__11}
+P0__11 -> P__8 [label = <~M_4732 = spk(sskNW_4660)>, arrowhead = normal]
+P0__11 -> P0__12 [label = <>, weight = 100]
+P__8 -> P__9 [label = <>, weight = 100]
+{rank = same; P__9 P0__12}
+P0__12 -> P0__13 [label = <>, weight = 100]
+P__9 -> P__10 [label = <>, weight = 100]
+{rank = same; P__10 P0__13}
+P0__13 -> P0__14 [label = <>, weight = 100]
+P__10 -> P__11 [label = <>, weight = 100]
+{rank = same; P__11 P0__14}
+P0__14 -> P__11 [label = <~M_4754 = spk(sskUE_4653)>, arrowhead = normal]
+P0__14 -> P0__15 [label = <>, weight = 100]
+P__11 -> P__12 [label = <>, weight = 100]
+{rank = same; P__12 P0__15}
+/*RPar */
+P0__15 -> P0_1__15 [label = <>]
+P0__15 -> P0_0__15 [label = <>]
+P0__15 [label = "", fixedsize = false, width = 0, height = 0, shape = none]
+{rank = same; P0_0__15 P0_1__15}
+P0_0__15 [label = "!", shape = ellipse]
+P0_1__15 [label = "!", shape = ellipse]
+P0_1_0__15 [label = "", fixedsize = false, width = 0, height = 0, shape = none]
+P0_1__15 -> P0_1_0__15 [label = <>, weight = 100]
+P0_1_0__15 -> P0_1_0__16 [label = <>, weight = 100]
+P0_1_0__16 [shape = plaintext, label = <<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"> <TR><TD>Beginning of process <FONT COLOR="darkgreen">clientUE</FONT>(pk(skNW_4651), spk(<br/>
+sskNW_4660), spk(sskUE_4653), sskUE_4653)</TD></TR><TR><TD><FONT COLOR="darkgreen">{14}</FONT><FONT COLOR="blue">new </FONT>Rue_4765</TD></TR></TABLE>>]
+P0_1_0__16 -> P0_1_0__17 [label = <>, weight = 100]
+P0_1_0__17 -> P0_1_0__18 [label = <>, weight = 100]
+P0_0__16 [label = "", style = invisible]
+P0_0__15 -> P0_0__16 [label = <>, weight = 100, style = invisible]
+P__12 -> P__13 [label = <>, weight = 100]
+{rank = same; P__13 P0_0__16 P0_1_0__18}
+P0_1_0__18 -> P0_1_0__19 [label = <>, weight = 100]
+P__13 -> P__14 [label = <>, weight = 100]
+{rank = same; P__14 P0_1_0__19}
+P0_1_0__19 -> P__14 [label = <~M_4767 = aenc((SUPI,Rue_4765),pk(skNW_4651))>, arrowhead = normal]
+P0_1_0__19 -> P0_1_0__20 [label = <>, weight = 100]
+P0_0__17 [label = "", style = invisible]
+P0_0__16 -> P0_0__17 [label = <>, weight = 100, style = invisible]
+P__14 -> P__15 [label = <>, weight = 100]
+{rank = same; P__15 P0_0__17 P0_1_0__20}
+P0_1_0__20 -> P0_1_0__21 [label = <>, weight = 100]
+P0_0__18 [label = "", style = invisible]
+P0_0__17 -> P0_0__18 [label = <>, weight = 100, style = invisible]
+P__15 -> P__16 [label = <>, weight = 100]
+{rank = same; P__16 P0_0__18 P0_1_0__21}
+P0_1_0__21 -> P0_1_0__22 [label = <>, weight = 100]
+P__16 -> P__17 [label = <>, weight = 100]
+{rank = same; P__17 P0_1_0__22}
+P0_1_0__22 -> P__17 [label = <a_4648>, dir = back, arrowhead = normal]
+P0_1_0__22 -> P0_1_0__23 [label = <>, weight = 100]
+P0_0__19 [label = "", style = invisible]
+P0_0__18 -> P0_0__19 [label = <>, weight = 100, style = invisible]
+P__17 -> P__18 [label = <>, weight = 100]
+{rank = same; P__18 P0_0__19 P0_1_0__23}
+P0_1_0__23 -> P0_1_0__24 [label = <>, weight = 100]
+P0_1_0__24 [shape = plaintext, label = <<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"> <TR><TD><FONT COLOR="darkgreen">{17}</FONT><FONT COLOR="blue">new </FONT>Rue1_4652</TD></TR></TABLE>>]
+P0_1_0__24 -> P0_1_0__25 [label = <>, weight = 100]
+P0_1_0__25 -> P0_1_0__26 [label = <>, weight = 100]
+P0_0__20 [label = "", style = invisible]
+P0_0__19 -> P0_0__20 [label = <>, weight = 100, style = invisible]
+P__18 -> P__19 [label = <>, weight = 100]
+{rank = same; P__19 P0_0__20 P0_1_0__26}
+P0_1_0__26 -> P0_1_0__27 [label = <>, weight = 100]
+P__19 -> P__20 [label = <>, weight = 100]
+{rank = same; P__20 P0_1_0__27}
+P0_1_0__27 -> P__20 [label = <~M_4779 = Rue1_4652>, arrowhead = normal]
+P0_1_0__27 -> P0_1_0__28 [label = <>, weight = 100]
+P0_0__21 [label = "", style = invisible]
+P0_0__20 -> P0_0__21 [label = <>, weight = 100, style = invisible]
+P__20 -> P__21 [label = <>, weight = 100]
+{rank = same; P__21 P0_0__21 P0_1_0__28}
+P0_1_0__28 -> P0_1_0__29 [label = <>, weight = 100]
+P0_0__22 [label = "", style = invisible]
+P0_0__21 -> P0_0__22 [label = <>, weight = 100, style = invisible]
+P__21 -> P__22 [label = <>, weight = 100]
+{rank = same; P__22 P0_0__22 P0_1_0__29}
+P0_1_0__29 -> P0_1_0__30 [label = <>, weight = 100]
+P__22 -> P__23 [label = <>, weight = 100]
+{rank = same; P__23 P0_1_0__30}
+P0_1_0__30 -> P__23 [label = <(a_4649,CertNW)>, dir = back, arrowhead = normal]
+P0_1_0__30 -> P0_1_0__31 [label = <>, weight = 100]
+P0_0__23 [label = "", style = invisible]
+P0_0__22 -> P0_0__23 [label = <>, weight = 100, style = invisible]
+P__23 -> P__24 [label = <>, weight = 100]
+{rank = same; P__24 P0_0__23 P0_1_0__31}
+P0_1_0__31 -> P0_1_0__32 [label = <>, weight = 100]
+P0_1_0__32 [shape = plaintext, label = <<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"> <TR><TD><FONT COLOR="darkgreen">{21}</FONT><FONT COLOR="blue">new </FONT>Rprekey_4650</TD></TR><TR><TD><FONT COLOR="darkgreen">{26}</FONT><FONT COLOR="blue">event</FONT> acceptsUE(SUPI)</TD></TR><TR><TD><FONT COLOR="darkgreen">{27}</FONT><FONT COLOR="blue">event</FONT> sendPrek(Rprekey_4650)</TD></TR></TABLE>>]
+P0_1_0__32 -> P0_1_0__33 [label = <>, weight = 100]
+P0_1_0__33 -> P0_1_0__34 [label = <>, weight = 100]
+P0_0__24 [label = "", style = invisible]
+P0_0__23 -> P0_0__24 [label = <>, weight = 100, style = invisible]
+P__24 -> P__25 [label = <>, weight = 100]
+{rank = same; P__25 P0_0__24 P0_1_0__34}
+P0_1_0__34 -> P0_1_0__35 [label = <>, weight = 100]
+P__25 -> P__26 [label = <>, weight = 100]
+{rank = same; P__26 P0_1_0__35}
+P0_1_0__35 -> P__26 [label = <(~M_4809,~M_4810,~M_4811,~M_4812)>, arrowhead = normal]
+P0_1_0__35 -> P0_1_0__36 [label = <>, weight = 100]
+P0_0__25 [label = "", style = invisible]
+P0_0__24 -> P0_0__25 [label = <>, weight = 100, style = invisible]
+P__26 -> P__27 [label = <>, weight = 100]
+{rank = same; P__27 P0_0__25 P0_1_0__36}
+P0_1_0__36 -> P0_1_0__37 [label = <>, weight = 100]
+P0_0__26 [label = "", style = invisible]
+P0_0__25 -> P0_0__26 [label = <>, weight = 100, style = invisible]
+P__27 -> P__28 [label = <>, weight = 100]
+{rank = same; P__28 P0_0__26 P0_1_0__37}
+P0_1_0__37 -> P0_1_0__38 [label = <>, weight = 100]
+P__28 -> P__29 [label = <>, weight = 100]
+{rank = same; P__29 P0_1_0__38}
+P0_1_0__38 -> P__29 [label = <~M_4812 = senc((a_4648,Rue1_4652,a_4649,CertNW),<br/>
+h(Rue1_4652,a_4649,Rprekey_4650))>, dir = back, arrowhead = normal]
+P0_1_0__38 -> P0_1_0__39 [label = <>, weight = 100]
+P0_0__27 [label = "", style = invisible]
+P0_0__26 -> P0_0__27 [label = <>, weight = 100, style = invisible]
+P__29 -> P__30 [label = <>, weight = 100]
+{rank = same; P__30 P0_0__27 P0_1_0__39}
+P0_1_0__39 -> P0_1_0__40 [label = <>, weight = 100]
+P0_1_0__40 [color = red, shape = plaintext, label = <<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"> <TR><TD><FONT COLOR="darkgreen">{31}</FONT><FONT COLOR="blue">event</FONT> termUE(a_4648)</TD></TR></TABLE>>]
+P0_1_0__40 -> P0_1_0__41 [label = <>, weight = 100]
+Abbrev [shape = plaintext, label = <<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4"><TR> <TD> Abbreviations </TD></TR><TR><TD>~M_4809 = aenc(Rprekey_4650,pk(skNW_4651))</TD></TR><TR><TD>~M_4810 = CertUE</TD></TR><TR><TD>~M_4811 = sign((a_4648,Rue1_4652,a_4649,CertNW),sskUE_4653)</TD></TR><TR><TD>~M_4812 = senc((a_4648,Rue1_4652,a_4649,CertNW),h(<br/>
+Rue1_4652,a_4649,Rprekey_4650))</TD></TR></TABLE>>]Abbrev -> P__0 [style = invisible, weight =100]}

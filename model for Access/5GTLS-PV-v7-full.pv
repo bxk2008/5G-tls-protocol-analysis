@@ -1,0 +1,164 @@
+(* 5G-TLS full model for ProVerif *)
+(* For IEEE Access *)
+(* Symmetric key encryption *)
+
+set reconstructTrace = true.
+
+(* Symmetric key encryption *)
+
+type key.
+fun senc(bitstring, key): bitstring.
+reduc forall m: bitstring, k: key; sdec(senc(m,k),k) = m.
+
+(* Asymmetric key encryption *)
+
+type skey.
+type pkey.
+
+fun pk(skey): pkey.
+fun aenc(bitstring, pkey): bitstring.
+
+reduc forall m: bitstring, sk: skey; adec(aenc(m,pk(sk)),sk) = m.
+
+(* Hash Function *)
+
+fun h(bitstring,bitstring,bitstring): bitstring.
+
+(* typeConverter Function *)
+fun b_to_k(bitstring):key [data,typeConverter].
+
+(* Digital signatures *)
+
+type sskey.
+type spkey.
+
+fun spk(sskey): spkey.
+fun sign(bitstring, sskey): bitstring.
+
+reduc forall m: bitstring, k: sskey; getmess(sign(m,k)) = m.
+reduc forall m: bitstring, k: sskey; checksign(sign(m,k),spk(k)) = m.
+
+
+
+free c1:channel.
+free c2:channel [private].
+free c3:channel [private].
+free CertAUSF:bitstring.
+free CertUE:bitstring.
+free SUPI:bitstring [private].
+free Ksession:key [private].
+free prekey:bitstring [private].
+
+query attacker(prekey).
+query attacker(Ksession).
+query attacker(SUPI).
+
+(*set maxDepth = 1000.*)
+
+(*set traceDisplay = long.*)
+
+event sendPrek(bitstring).
+event acceptPrek(bitstring).
+
+query x:bitstring; inj-event(acceptPrek(x))==>inj-event(sendPrek(x)).
+
+event acceptsUE(bitstring).
+event termAUSF(bitstring).
+
+query x:bitstring; inj-event(termAUSF(x))==>inj-event(acceptsUE(x)).
+
+event acceptsAUSF(bitstring).
+event termUE(bitstring).
+
+query x:bitstring; inj-event(termUE(x))==>inj-event(acceptsAUSF(x)).
+
+let UE(pkAUSF:pkey,pkUDM:pkey,spkAUSF:spkey,spkUE:spkey,sskUE:sskey) =	
+	new Rue:bitstring;
+	out(c1,aenc((SUPI,Rue),pkUDM));
+	in(c1,Startx:bitstring);
+	new Rue1:bitstring;
+	out(c1,Rue1);
+	in(c1,(Rausfx:bitstring,CertAUSFx:bitstring));
+	let (=CertAUSF) = CertAUSFx in
+	new Rprekey:bitstring;
+	let prekey = Rprekey in
+	let a = h(Rue1,Rausfx,prekey) in
+	let Ksession = b_to_k(a) in 
+	let HSUE = (Startx,Rue1,Rausfx,CertAUSFx) in 
+	event acceptsUE(Rue1);
+	event sendPrek(prekey);
+	out(c1,(aenc(prekey,pkAUSF),CertUE,sign(HSUE,sskUE),senc(HSUE,Ksession)));
+	in(c1,HSAUSFx:bitstring);
+	let (=HSUE) = sdec(HSAUSFx,Ksession) in
+	new EAPM:bitstring;
+	out(c1,EAPM);
+	in(c1,SUCMx:bitstring);
+	event termUE(Rausfx).
+
+let SEAF(pkAUSF:pkey,pkUDM:pkey,spkAUSF:spkey,spkUE:spkey,SEAFN:bitstring) =
+	in(c1,x1:bitstring);
+	out(c2,(x1,SEAFN));
+	in(c2,x2:bitstring);
+	out(c1,x2);
+	in(c1,x3:bitstring);
+	out(c2,x3);
+	in(c2,(x4:bitstring,x5:bitstring));
+	out(c1,(x4,x5));
+	in(c1,(x6:bitstring,x7:bitstring,x8:bitstring,x9:bitstring));
+	out(c2,(x6,x7,x8,x9));
+	in(c2,x10:bitstring);
+	out(c1,x10);
+	in(c1,EAPMx:bitstring);
+	out(c2,EAPMx);
+	in(c2,SUCMx:bitstring);
+	out(c1,SUCMx).
+	
+
+let AUSF(skAUSF:skey,pkUE:pkey,spkUE:spkey,sskAUSF:sskey,spkAUSF:spkey,SEAFN:bitstring) =
+	in(c2,(SUPIx:bitstring,SEAFNx:bitstring));
+	if SEAFNx = SEAFN then
+	out(c3,(SUPIx,SEAFNx));
+	in(c3, Startx:bitstring);
+	out(c2, Startx);
+	in(c2,(Rue1x:bitstring));
+	new Rausf:bitstring;
+	out(c2,(Rausf,CertAUSF));
+	in(c2,(y:bitstring,CertUEx:bitstring,t:bitstring,z:bitstring));
+	let (=CertUE) = CertUEx in
+	let prekeyx = adec(y,skAUSF) in 
+	let b = h(Rue1x,Rausf,prekeyx) in
+	let Ksessionx = b_to_k(b) in
+	new HSAUSF:bitstring;
+	let HSAUSF = (Startx,Rue1x,Rausf,CertAUSF) in
+	let (=HSAUSF) = sdec(z,Ksessionx) in
+	let (=HSAUSF) = checksign(t,spkUE) in
+	event acceptPrek(prekeyx);
+	event acceptsAUSF(Rausf);
+	out(c2,senc(HSAUSF,Ksessionx));
+	in(c2,EAPMx:bitstring);
+	new SUCM:bitstring;
+	out(c2,SUCM);
+	event termAUSF(Rue1x).
+
+let UDM(skUDM:skey) =
+	in(c3,(x:bitstring,SEAFNx:bitstring));
+	let (SUPIx:bitstring,Ruex:bitstring) = adec(x,skUDM) in
+	if SUPIx = SUPI then
+	new start:bitstring;
+	out(c3,start).
+	
+process
+	new skUE:skey;
+	new skAUSF:skey;
+	new skUDM:skey;
+	new sskAUSF:sskey;
+	new sskUE:sskey;
+	new SEAFN:bitstring;
+	let pkUE = pk(skUE) in out(c1,pkUE);out(c2,pkUE);out(c3,pkUE);
+	let pkAUSF = pk(skAUSF) in out(c1,pkAUSF); out(c2,pkAUSF);out(c3,pkAUSF);
+	let pkUDM = pk(skUDM) in out(c1,pkUDM);out(c2,pkUDM);out(c3,pkUDM);
+	let spkAUSF = spk(sskAUSF) in out(c1,spkAUSF);out(c2,spkAUSF);out(c3,spkAUSF);
+	let spkUE = spk(sskUE) in out(c1,spkUE);out(c2,spkUE);out(c3,spkUE);
+	( (!UE(pkAUSF,pkUDM,spkAUSF,spkUE,sskUE)) | (!SEAF(pkAUSF,pkUDM,spkAUSF,spkUE,SEAFN)) | (!AUSF(skAUSF,pkUE,spkUE,sskAUSF,spkAUSF,SEAFN)) | (!UDM(skUDM)))
+	
+
